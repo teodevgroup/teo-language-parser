@@ -132,7 +132,7 @@ mod tests {
             let base = "src";
             let path = "fsutil\\default.rs";
             let joined = path_join(base, path);
-            assert_eq!(joined, "src/fsutil/default.rs");
+            assert_eq!(joined, "src\\fsutil\\default.rs");
             return;
         } else {
             let base = "src";
@@ -148,7 +148,7 @@ mod tests {
             let base = "src";
             let path = "fsutil\\..\\fsutil\\default.rs";
             let joined = path_join(base, path);
-            assert_eq!(joined, "src/fsutil/default.rs");
+            assert_eq!(joined, "src\\fsutil\\default.rs");
             return;
         } else {
             let base = "src";
@@ -172,7 +172,7 @@ mod tests {
             let base = "";
             let path = "fsutil\\default.rs";
             let joined = path_join(base, path);
-            assert_eq!(joined, "fsutil/default.rs");
+            assert_eq!(joined, "fsutil\\default.rs");
             return;
         } else {
             let base = "";
