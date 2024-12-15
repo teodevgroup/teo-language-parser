@@ -107,9 +107,16 @@ mod tests {
 
     #[test]
     fn test_path_is_absolute_returns_true_if_path_is_absolute() {
-        let path = "/home/user";
-        let is_absolute = path_is_absolute(path);
-        assert_eq!(is_absolute, true);
+        if cfg!(windows) {
+            let path = "C:\\Users\\user";
+            let is_absolute = path_is_absolute(path);
+            assert_eq!(is_absolute, true);
+            return;
+        } else {
+            let path = "/home/user";
+            let is_absolute = path_is_absolute(path);
+            assert_eq!(is_absolute, true);
+        }
     }
 
     #[test]
@@ -121,18 +128,34 @@ mod tests {
 
     #[test]
     fn test_path_join_returns_joined_path() {
-        let base = "src";
-        let path = "fsutil/default.rs";
-        let joined = path_join(base, path);
-        assert_eq!(joined, "src/fsutil/default.rs");
+        if cfg!(windows) {
+            let base = "src";
+            let path = "fsutil\\default.rs";
+            let joined = path_join(base, path);
+            assert_eq!(joined, "src/fsutil/default.rs");
+            return;
+        } else {
+            let base = "src";
+            let path = "fsutil/default.rs";
+            let joined = path_join(base, path);
+            assert_eq!(joined, "src/fsutil/default.rs");
+        }
     }
 
     #[test]
     fn test_path_join_removes_redundant_path_components() {
-        let base = "src";
-        let path = "fsutil/../fsutil/default.rs";
-        let joined = path_join(base, path);
-        assert_eq!(joined, "src/fsutil/default.rs");
+        if cfg!(windows) {
+            let base = "src";
+            let path = "fsutil\\..\\fsutil\\default.rs";
+            let joined = path_join(base, path);
+            assert_eq!(joined, "src/fsutil/default.rs");
+            return;
+        } else {
+            let base = "src";
+            let path = "fsutil/../fsutil/default.rs";
+            let joined = path_join(base, path);
+            assert_eq!(joined, "src/fsutil/default.rs");
+        }
     }
 
     #[test]
@@ -145,10 +168,18 @@ mod tests {
 
     #[test]
     fn test_path_join_returns_path_if_base_is_empty() {
-        let base = "";
-        let path = "fsutil/default.rs";
-        let joined = path_join(base, path);
-        assert_eq!(joined, "fsutil/default.rs");
+        if cfg!(windows) {
+            let base = "";
+            let path = "fsutil\\default.rs";
+            let joined = path_join(base, path);
+            assert_eq!(joined, "fsutil/default.rs");
+            return;
+        } else {
+            let base = "";
+            let path = "fsutil/default.rs";
+            let joined = path_join(base, path);
+            assert_eq!(joined, "fsutil/default.rs");
+        }
     }
 
     #[test]
