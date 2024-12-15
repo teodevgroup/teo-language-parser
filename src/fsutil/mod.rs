@@ -62,7 +62,7 @@ impl FSUtil {
     /// }
     ///
     /// fn path_join(base: &str, path: &str) -> String {
-    ///     Path::new(base).join(Path::new(path)).to_str().unwrap().to_string()
+    ///     format!("{}/{}", base, path)
     /// }
     ///
     /// fn file_is_directory(path: &str) -> bool {
