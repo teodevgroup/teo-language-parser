@@ -1,0 +1,11 @@
+[package]
+name = "teo-language-parser"
+version = "0.0.1"
+edition = "2021"
+
+[features]
+default = ["stdfs"]
+stdfs = ["path-clean"]
+
+[dependencies]
+path-clean = { version = "1.0.1", optional = true }
