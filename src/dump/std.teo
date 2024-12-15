@@ -1,0 +1,2278 @@
+/// # TEO standard library
+///
+/// This library provides fundamental building blocks for developer to build
+/// TEO ORM and HTTP server apps. This library doesn't need to be imported as
+/// every unresolved identifiers are resolved to this library.
+namespace std {
+
+    /// ## DecoratedTarget
+    ///
+    /// The target of a decorator function to transform with.
+    enum DecoratedTarget {
+        type
+        model
+        field
+        relation
+        property
+        enum
+        member
+        handler
+    }
+
+    /// ## Decorator
+    ///
+    /// A special function to mark a function as using as a decorator.
+    function decorator(for: DecoratedTarget, as?: String?, unique: Bool? = false, exclusive: Bool? = false): Decorator<.function> {
+        native
+    }
+
+    /// ## Config
+    ///
+    /// A decorator to mark a type as a readable configuration.
+    @decorator(for: .type, as: "config", unique: false)
+    function `config`(name?: String, required: Bool? = false, unique: Bool? = false): Decorator<.type> {
+        native
+    }
+
+    /// ## EnvVars
+    ///
+    /// The container class of environment variables.
+    struct EnvVars {
+        static function new(): Self {
+            native
+        }
+        function subscript(key?: String): String? {
+            native
+        }
+    }
+
+    /// ## ENV
+    ///
+    /// Environment variables. This constant is the singleton instance of
+    /// `EnvVars`.
+    let ENV = EnvVars()
+
+    /// ## Null
+    ///
+    /// Represents a null value.
+    struct Null {
+        static function new(): Self {
+            native
+        }
+    }
+
+    /// ## Bool
+    ///
+    /// Represents a bool value.
+    struct Bool {
+        static function new(from?: String): Self {
+            native
+        }
+    }
+
+    struct Int {
+        static function new(from?: String | Int64): Self {
+            native
+        }
+    }
+
+    struct Int64 {
+        static function new(from?: String | Int): Self {
+            native
+        }
+    }
+
+    struct Float32 {
+        static function new(from?: String | Float): Self {
+            native
+        }
+    }
+
+    struct Float {
+        static function new(from?: String | Float32): Self {
+            native
+        }
+    }
+
+    struct Decimal {
+        static function new(from?: String): Self {
+            native
+        }
+    }
+
+    struct String {
+        static function new(from?: Int | Int64 | Float | Float32 | Bool): Self {
+            native
+        }
+    }
+
+    #if available(mongo)
+    struct ObjectId {
+        static function new(from?: String): Self {
+            native
+        }
+    }
+    #end
+
+    struct Date {
+        static function new(from?: String | DateTime | Float | Float32 | Int | Int64): Self
+    }
+
+    struct DateTime {
+        static function new(from?: String | Date | Float | Float32 | Int | Int64): Self
+    }
+
+    struct File { }
+
+    struct Regex { }
+
+    struct Array<T> {
+        static function new(): Self {
+            native
+        }
+        function subscript(index?: Int): T? {
+            native
+        }
+    }
+
+    struct Dictionary<T> {
+        static function new(): Self {
+            native
+        }
+        function subscript(key?: String): T? {
+            native
+        }
+    }
+
+    struct Range<T> { }
+
+    /// ## Sort Order
+    ///
+    /// Represents the sort order
+    enum Sort {
+        asc
+        desc
+    }
+
+    /// ## String Match Mode
+    ///
+    /// Whether the string query is case sensitive or not
+    enum StringMatchMode {
+        default
+        caseInsensitive
+    }
+
+    /// ## Database
+    ///
+    /// Represents the supported database
+    enum Database {
+        /// ### MongoDB
+        ///
+        /// The MongoDB database
+        mongo
+        /// ### MySQL
+        ///
+        /// The MySQL database
+        mysql
+        /// ### PostgreSQL
+        ///
+        /// The PostgreSQL database
+        postgres
+        /// ### SQLite
+        ///
+        /// The SQLite database
+        sqlite
+    }
+
+    /// ## TypeScript HTTP Provider
+    ///
+    /// Specify the API which provides HTTP request functionality.
+    enum TypeScriptHTTPProvider {
+        /// @name Fetch
+        /// Use the fetch API. This is the default value
+        fetch
+        /// @name Taro
+        /// Use the Taro's API
+        taro
+        /// @name WeChat
+        /// Use the WeChat's API
+        wechat
+    }
+
+    /// ## Client Language
+    ///
+    /// The programming language of the generated client
+    enum ClientLanguage {
+        /// ### TypeScript
+        /// The TypeScript programming language
+        typeScript(httpProvider: TypeScriptHTTPProvider?)
+        /// ### Swift
+        /// The Swift programming language
+        swift
+        /// ### Kotlin
+        /// The Kotlin programming language
+        kotlin
+        /// ### C#
+        /// The C# programming language
+        cSharp
+        /// ### Dart
+        /// The Dart programming language
+        dart
+    }
+
+    /// ## Runtime
+    ///
+    /// Represents the supported runtime of Teo
+    enum Runtime {
+        /// ### Rust
+        ///
+        /// The rust runtime
+        rust
+        /// ### Node.js
+        ///
+        /// The Node.js runtime
+        node
+        /// ### Python
+        ///
+        /// The python runtime
+        python
+    }
+
+    #if available(mysql)
+    enum MySQLDatabaseType {
+        varChar(len?: Int)
+        text
+        char(len?: Int)
+        tinyText
+        mediumText
+        longText
+        bit(len?: Int)
+        tinyInt(len?: Int, signed: Bool)
+        int(signed: Bool)
+        smallInt(signed: Bool)
+        mediumInt(signed: Bool)
+        bigInt(signed: Bool)
+        year
+        float
+        double
+        decimal(precision?: Int, scale?: Int)
+        dateTime(len?: Int)
+        date
+        time(len?: Int)
+        timestamp(len?: Int)
+        json
+        longBlob
+        binary
+        varBinary
+        tinyBlob
+        blob
+        mediumBlob
+    }
+    #end
+
+    #if available(postgres)
+    enum PostgreSQLDatabaseType {
+        text
+        char(len?: Int)
+        varChar(len?: Int)
+        bit(len?: Int)
+        varBit
+        uuid
+        xml
+        inet
+        boolean
+        integer
+        smallInt
+        int
+        bigInt
+        oid
+        doublePrecision
+        real
+        decimal(precision?: Int, scale?: Int)
+        money
+        timestamp(len?: Int)
+        timestampTz(len?: Int)
+        date
+        time
+        timeTz
+        json
+        jsonB
+        byteA
+    }
+    #end
+
+    #if available(sqlite)
+    enum SQLiteDatabaseType {
+        text
+        integer
+        real
+        decimal
+        blob
+    }
+    #end
+
+    #if available(mongo)
+    enum MongoDBDatabaseType {
+        string
+        bool
+        int
+        long
+        double
+        date
+        timestamp
+        binData
+    }
+    #end
+
+    /// ## HTTP method
+    ///
+    /// The HTTP method for a request
+    enum Method {
+        get
+        post
+        put
+        patch
+        delete
+    }
+
+    /// ### Delete
+    ///
+    /// Specify what to do if the related record is deleted.
+    enum Delete {
+        /// @name No Action
+        /// If related record is deleted, do nothing
+        noAction
+        /// @name Nullify
+        /// If related record is deleted, set the foreign key to null.
+        /// This is the default behavior
+        nullify
+        /// @name Cascade
+        /// If related record is deleted, delete this record, too.
+        cascade
+        /// @name Deny
+        /// Deny related record to be deleted
+        deny
+        /// @name Default
+        /// If related record is deleted, set the foreign keys to default values.
+        /// If any of the foreign keys doesn't have a default value, an error is raised.
+        default
+    }
+
+    /// @name Update
+    /// Specify what to do if the related record is updated.
+    enum Update {
+        /// @name No Action
+        /// If related record is updated, do nothing
+        noAction
+        /// @name Nullify
+        /// If related record is updated, set the foreign key to null.
+        nullify
+        /// @name Update
+        /// If related record is updated, update the foreign key.
+        update
+        /// @name Delete
+        /// If related record is updated, delete this record.
+        delete
+        /// @name Deny
+        /// Deny foreign key value of related record to be updated.
+        deny
+        /// @name Default
+        /// If related record is updated, set the foreign keys to default values.
+        /// If any of the foreign keys doesn't have a default value, an error is raised.
+        default
+    }
+
+    /// ## Client Host
+    ///
+    /// The connection URL to the server for the client
+    enum ClientHost {
+        /// @name string
+        /// A constant string value.
+        string(value?: String)
+        /// @name inject
+        /// The value is injected into the generated code.
+        inject(value?: String)
+    }
+
+    /// ## Connector
+    ///
+    /// Represents the database connection
+    @config("connector", required: false, unique: true)
+    type Connector = {
+        /// ### Provider
+        ///
+        /// Represents the type of database this app connects
+        provider: Database,
+        /// ### URL
+        ///
+        /// The URL of the database to connect to
+        url: String,
+        /// ### Log Queries
+        ///
+        /// Whether log the executed database queries
+        logQueries: Bool?,
+        /// ### Log seed records
+        ///
+        /// Whether log the records when seeding data
+        logSeedRecords: Bool?,
+    }
+
+    /// ## Server
+    ///
+    /// Define the HTTP server configuration
+    @config("server", required: false, unique: true)
+    type Server = {
+        /// @name bind
+        /// On which IP and port the HTTP server binds
+        bind: (String, Int),
+        /// @name path prefix
+        /// The request URL path prefix
+        pathPrefix: String?,
+    }
+
+    /// @name Entity Generator
+    /// Define an entity generator
+    @config("entity", required: false, unique: false)
+    type Entity = {
+        /// @name Provider
+        /// Which runtime is used for the generated entities
+        provider: Runtime,
+        /// @name Destination
+        /// Where the generated entity is placed
+        dest: String,
+    }
+
+    /// @name Client Generator
+    /// Define a client generator
+    @config("client", required: false, unique: false)
+    type Client = {
+        /// @name Provider
+        /// Which programming language is used for the generated client
+        provider: ClientLanguage,
+        /// @name Destination
+        /// Where the generated client is placed
+        dest: String,
+        /// @name Package
+        /// Whether generate code only or a package, defaults to `true`
+        package: Bool?,
+        /// @name Host
+        /// The host for the generated client
+        host: ClientHost,
+        /// @name Object Name
+        /// The main object name for the generated package
+        objectName: String?,
+        /// @name Git Commit
+        /// Whether do `git commit` after each generation
+        gitCommit: Bool?,
+    }
+
+    /// @name Admin Dashboard Generator
+    /// Define an admin dashboard generator
+    @config("admin", required: false, unique: true)
+    type Admin = {
+        /// @name Destination
+        /// Where the generated client is placed
+        dest: String,
+        /// @name Host
+        /// The host for the generated admin dashboard
+        host: ClientHost,
+        /// @name Languages
+        /// The supported languages
+        languages: admin.Language[]?,
+    }
+
+    #if available(database)
+
+    type Args<T: Model> = {
+        native
+    }
+    type FindManyArgs<T: Model> = {
+        native
+    }
+    type FindFirstArgs<T: Model> = {
+        native
+    }
+    type FindUniqueArgs<T: Model> = {
+        native
+    }
+    type CreateArgs<T: Model> = {
+        native
+    }
+    type UpdateArgs<T: Model> = {
+        native
+    }
+    type UpsertArgs<T: Model> = {
+        native
+    }
+    type CopyArgs<T: Model> = {
+        native
+    }
+    type DeleteArgs<T: Model> = {
+        native
+    }
+    type CreateManyArgs<T: Model> = {
+        native
+    }
+    type UpdateManyArgs<T: Model> = {
+        native
+    }
+    type CopyManyArgs<T: Model> = {
+        native
+    }
+    type DeleteManyArgs<T: Model> = {
+        native
+    }
+    type CountArgs<T: Model> = {
+        native
+    }
+    type AggregateArgs<T: Model> = {
+        native
+    }
+    type GroupByArgs<T: Model> = {
+        native
+    }
+    type RelationFilter<T: Model> = {
+        native
+    }
+    type ListRelationFilter<T: Model> = {
+        native
+    }
+    type WhereInput<T: Model> = {
+        native
+    }
+    type WhereUniqueInput<T: Model> = {
+        native
+    }
+    type ScalarWhereWithAggregatesInput<T: Model> = {
+        native
+    }
+    type CountAggregateInputType<T: Model> = {
+        native
+    }
+    type SumAggregateInputType<T: Model> = {
+        native
+    }
+    type AvgAggregateInputType<T: Model> = {
+        native
+    }
+    type MaxAggregateInputType<T: Model> = {
+        native
+    }
+    type MinAggregateInputType<T: Model> = {
+        native
+    }
+    type CreateInput<T: Model> = {
+        native
+    }
+    type CreateInputWithout<T: Model> = {
+        native
+    }
+    type CreateNestedOneInput<T: Model> = {
+        native
+    }
+    type CreateNestedOneInputWithout<T: Model> = {
+        native
+    }
+    type CreateNestedManyInput<T: Model> = {
+        native
+    }
+    type CreateNestedManyInputWithout<T: Model> = {
+        native
+    }
+    type UpdateInput<T: Model> = {
+        native
+    }
+    type UpdateInputWithout<T: Model> = {
+        native
+    }
+    type UpdateNestedOneInput<T: Model> = {
+        native
+    }
+    type UpdateNestedOneInputWithout<T: Model> = {
+        native
+    }
+    type UpdateNestedManyInput<T: Model> = {
+        native
+    }
+    type UpdateNestedManyInputWithout<T: Model> = {
+        native
+    }
+    type ConnectOrCreateInput<T: Model> = {
+        native
+    }
+    type ConnectOrCreateInputWithout<T: Model> = {
+        native
+    }
+    type UpdateWithWhereUniqueInput<T: Model> = {
+        native
+    }
+    type UpdateWithWhereUniqueInputWithout<T: Model> = {
+        native
+    }
+    type UpsertWithWhereUniqueInput<T: Model> = {
+        native
+    }
+    type UpsertWithWhereUniqueInputWithout<T: Model> = {
+        native
+    }
+    type UpdateManyWithWhereInput<T: Model> = {
+        native
+    }
+    type UpdateManyWithWhereInputWithout<T: Model> = {
+        native
+    }
+    type Select<T: Model> = {
+        native
+    }
+    type Include<T: Model> = {
+        native
+    }
+    type OrderByInput<T: Model> = {
+        native
+    }
+    type Result<T: Model> = {
+        native
+    }
+    type CountAggregateResult<T: Model> = {
+        native
+    }
+    type SumAggregateResult<T: Model> = {
+        native
+    }
+    type AvgAggregateResult<T: Model> = {
+        native
+    }
+    type MinAggregateResult<T: Model> = {
+        native
+    }
+    type MaxAggregateResult<T: Model> = {
+        native
+    }
+    type AggregateResult<T: Model> = {
+        native
+    }
+    type GroupByResult<T: Model> = {
+        native
+    }
+    type ScalarUpdateInput<T: Model> = {
+        native
+    }
+
+    /// @name Map
+    /// Specify an underlying database table name for the model
+    @decorator(for: .model, as: "map", unique: true)
+    function modelDecoratorMap(tableName?: String): Decorator<.model> {
+        native
+    }
+
+    /// @name Id
+    /// Specify the model's primary index
+    @decorator(for: .model, as: "id", unique: true)
+    function modelDecoratorId(fields?: FieldIndexes<Self>[], map?: String?): Decorator<.model> {
+        native
+    }
+
+    /// @name Index
+    /// Add an index to the model
+    @decorator(for: .model, as: "index")
+    function modelDecoratorIndex(fields?: FieldIndexes<Self>[], map?: String?): Decorator<.model> {
+        native
+    }
+
+    /// @name Unique
+    /// Add a unique constraint to the model
+    @decorator(for: .model, as: "unique")
+    function modelDecoratorUnique(fields?: FieldIndexes<Self>[], map?: String?): Decorator<.model> {
+        native
+    }
+
+    /// @name Migration
+    /// Specify the migration operations for the model
+    @decorator(for: .model, as: "migration", unique: true)
+    function modelDecoratorMigration(renamed?: Enumerable<String>?, version?: String?, drop?: Bool?): Decorator<.model> {
+        native
+    }
+
+    /// @name Before Save
+    /// Specify the action to trigger before an object is saved
+    @decorator(for: .model, as: "beforeSave")
+    function modelDecoratorBeforeSave(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// @name After Save
+    /// Specify the action to trigger after an object is saved
+    @decorator(for: .model, as: "afterSave")
+    function modelDecoratorAfterSave(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// @name Before Delete
+    /// Specify the action to trigger before an object is deleted
+    @decorator(for: .model, as: "beforeDelete")
+    function modelDecoratorBeforeDelete(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// @name After Delete
+    /// Specify the action to trigger after an object is deleted
+    @decorator(for: .model, as: "afterDelete")
+    function modelDecoratorAfterDelete(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// ## Can Read
+    /// Specify the permission checker for read on this model
+    @decorator(for: .model, as: "canRead", unique: true)
+    function modelDecoratorCanRead(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// ## Can Create
+    /// Specify the permission checker for create on this model
+    @decorator(for: .model, as: "canCreate", unique: true)
+    function modelDecoratorCanCreate(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// ## Can Update
+    ///
+    /// Specify the permission checker for update on this model
+    @decorator(for: .model, as: "canUpdate", unique: true)
+    function modelDecoratorCanUpdate(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// ## Can Delete
+    ///
+    /// Specify the permission checker for delete on this model
+    @decorator(for: .model, as: "canDelete", unique: true)
+    function modelDecoratorCanDelete(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// ## Can Save
+    ///
+    /// Specify the permission checker for save on this model
+    @decorator(for: .model, as: "canSave", unique: true)
+    function modelDecoratorCanSave(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// # Can Mutate
+    ///
+    /// Specify the permission checker for mutate on this model
+    @decorator(for: .model, as: "canMutate", unique: true)
+    function modelDecoratorCanMutate(pipeline?: Pipeline<Self, Ignored>): Decorator<.model> {
+        native
+    }
+
+    /// ## Generate Client
+    ///
+    /// Specify whether generate client for this model
+    @decorator(for: .model, as: "generateClient", unique: true)
+    function modelDecoratorGenerateClient(generate?: Bool = true): Decorator<.model> {
+        native
+    }
+
+    /// ## Generate Entity
+    ///
+    /// Specify whether generate entity for this model
+    @decorator(for: .model, as: "generateEntity", unique: true)
+    function modelDecoratorGenerateEntity(generate?: Bool = true): Decorator<.model> {
+        native
+    }
+
+    /// ## Show in Studio
+    ///
+    /// Specify whether show this model in Teo Studio
+    @decorator(for: .model, as: "showInStudio", unique: true)
+    function modelDecoratorShowInStudio(show?: Bool = true): Decorator<.model> {
+        native
+    }
+
+    /// ## Map
+    ///
+    /// Specify an underlying database column name for the model field
+    @decorator(for: .field, as: "map", unique: true)
+    function fieldDecoratorMap(columnName?: String): Decorator<.field> {
+        native
+    }
+
+    #if available(mysql)
+    /// ## Database Type
+    ///
+    /// Specify an underlying database type for the model field
+    @decorator(for: .field, as: "db", unique: true)
+    function fieldDecoratorDbMySQL(type?: MySQLDatabaseType): Decorator<.field> {
+        native
+    }
+    #end
+
+    #if available(postgres)
+    /// ## Database Type
+    ///
+    /// Specify an underlying database type for the model field
+    @decorator(for: .field, as: "db", unique: true)
+    function fieldDecoratorDbPostgres(type?: PostgreSQLDatabaseType): Decorator<.field> {
+        native
+    }
+    #end
+
+    #if available(sqlite)
+    /// ## Database Type
+    ///
+    /// Specify an underlying database type for the model field
+    @decorator(for: .field, as: "db", unique: true)
+    function fieldDecoratorDbSQLite(type?: SQLiteDatabaseType): Decorator<.field> {
+        native
+    }
+    #end
+
+    #if available(mongo)
+    /// ## Database Type
+    ///
+    /// Specify an underlying database type for the model field
+    @decorator(for: .field, as: "db", unique: true)
+    function fieldDecoratorDbMongo(type?: MongoDBDatabaseType): Decorator<.field> {
+        native
+    }
+    #end
+
+    /// ## Readonly
+    ///
+    /// Disallow this field to be written by the client
+    @decorator(for: .field, as: "readonly", unique: true)
+    function fieldDecoratorReadonly(): Decorator<.field> {
+        native
+    }
+
+    /// ## Writeonly
+    ///
+    /// Disallow this field to be read by the client
+    @decorator(for: .field, as: "writeonly", unique: true)
+    function fieldDecoratorWriteonly(): Decorator<.field> {
+        native
+    }
+
+    /// ## Internal
+    ///
+    /// Disallow this field to be read or write by the client
+    @decorator(for: .field, as: "internal", unique: true)
+    function fieldDecoratorInternal(): Decorator<.field> {
+        native
+    }
+
+    /// ## Write on Create
+    ///
+    /// This field can only be written on create
+    @decorator(for: .field, as: "writeOnCreate", unique: true)
+    function fieldDecoratorWriteOnCreate(): Decorator<.field> {
+        native
+    }
+
+    /// ## Write Once
+    ///
+    /// This field can only be written if current value is null
+    @decorator(for: .field, as: "writeOnce", unique: true)
+    function fieldDecoratorWriteOnce(): Decorator<.field> {
+        native
+    }
+
+    /// ## Write Nonnull
+    ///
+    /// This field can only be written if new value is not null.
+    /// The initial value of this field can be null.
+    @decorator(for: .field, as: "writeNonNull", unique: true)
+    function fieldDecoratorWriteNonNull(): Decorator<.field> {
+        native
+    }
+
+    /// ## Read If
+    ///
+    /// This field can be read by the client if the pipeline passes
+    @decorator(for: .field, as: "readIf", unique: true)
+    function fieldDecoratorReadIf(cond?: Pipeline<Self, Ignored>): Decorator<.field> {
+        native
+    }
+
+    /// ## Write If
+    ///
+    /// This field can be written by the client if the pipeline passes
+    @decorator(for: .field, as: "writeIf", unique: true)
+    function fieldDecoratorWriteIf(cond?: Pipeline<Self, Ignored>): Decorator<.field> {
+        native
+    }
+
+    /// ## Read Write
+    ///
+    /// This field can be written and read by the client, this is the default behavior
+    @decorator(for: .field, as: "readwrite", unique: true)
+    function fieldDecoratorReadWrite(): Decorator<.field> {
+        native
+    }
+
+    /// ## Present With
+    ///
+    /// This field is required if the specified fields are not null
+    @decorator(for: .field, as: "presentWith", unique: true)
+    function fieldDecoratorPresentWith(fields?: Enumerable<ScalarFields<Self>>): Decorator<.field> {
+        native
+    }
+
+    /// ## Present Without
+    ///
+    /// This field is required if the specified fields are null
+    @decorator(for: .field, as: "presentWithout", unique: true)
+    function fieldDecoratorPresentWithout(fields?: Enumerable<ScalarFields<Self>>): Decorator<.field> {
+        native
+    }
+
+    /// ## Present If
+    ///
+    /// This field is required if the pipeline passes
+    @decorator(for: .field, as: "presentIf", unique: true)
+    function fieldDecoratorPresentIf(cond?: Pipeline<Self, Ignored>): Decorator<.field> {
+        native
+    }
+
+    /// ## Atomic
+    ///
+    /// This field can be updated with atomic updator
+    @decorator(for: .field, as: "atomic", unique: true)
+    function fieldDecoratorAtomic(): Decorator<.field> {
+        native
+    }
+
+    /// ## Nonatomic
+    ///
+    /// This field cannot be updated with atomic updator
+    @decorator(for: .field, as: "nonatomic", unique: true)
+    function fieldDecoratorNonatomic(): Decorator<.field> {
+        native
+    }
+
+    /// ## Id
+    ///
+    /// Specify this field as the model's primary index
+    @decorator(for: .field, as: "id", exclusive: true)
+    function fieldDecoratorId(sort?: Sort, length?: Int, map?: String): Decorator<.field> {
+        native
+    }
+
+    /// ## Index
+    ///
+    /// Specify this field as an index of this model
+    @decorator(for: .field, as: "index", unique: true)
+    function fieldDecoratorIndex(sort?: Sort, length?: Int, map?: String): Decorator<.field> {
+        native
+    }
+
+    /// ## Unique
+    ///
+    /// Specify this field as a unique index of this model
+    @decorator(for: .field, as: "unique", unique: true)
+    function fieldDecoratorUnique(sort?: Sort, length?: Int, map?: String): Decorator<.field> {
+        native
+    }
+
+    /// ## Virtual
+    ///
+    /// A virtual field will not save into the database
+    @decorator(for: .field, as: "virtual", unique: true)
+    function fieldDecoratorVirtual(): Decorator<.field> {
+        native
+    }
+
+    /// ## Input Omissible
+    ///
+    /// When type checking and generating clients, the input is always optional
+    @decorator(for: .field, as: "inputOmissible", unique: true)
+
+    /// ## Output Omissible
+    ///
+    /// When generating clients, the output is always optional
+    @decorator(for: .field, as: "outputOmissible", unique: true)
+
+    #if available(mongo)
+
+    /// ## Auto
+    ///
+    /// The field value is automatically set by the underlying database
+    @decorator(for: .field, as: "auto", unique: true)
+    function fieldDecoratorAuto(): Decorator<.field> {
+        native
+    }
+
+    #end
+
+    #if available(sql)
+
+    /// ## Auto Increment
+    ///
+    /// The field value is a serial number automatically set by the underlying database
+    @decorator(for: .field, as: "autoIncrement", unique: true)
+    function fieldDecoratorAutoIncrement(): Decorator<.field> {
+        native
+    }
+
+    #end
+
+    /// ## Default
+    ///
+    /// Specify a default value for this field
+    @decorator(for: .field, as: "default", unique: true)
+    function fieldDecoratorDefault(value?: ThisFieldType | Pipeline<Null, ThisFieldType>): Decorator<.field> {
+        native
+    }
+
+    /// ## Foreign Key
+    ///
+    /// This field is used as foreign key
+    @decorator(for: .field, as: "foreignKey", unique: true)
+
+    /// ## On Set
+    ///
+    /// This pipeline is triggered when value is set
+    @decorator(for: .field, as: "onSet", unique: true)
+    function fieldDecoratorOnSet(pipeline?: Pipeline<ThisFieldType?, ThisFieldType?>): Decorator<.field> {
+        native
+    }
+
+    /// ## On Save
+    ///
+    /// This pipeline is triggered before the value is saving into the database
+    @decorator(for: .field, as: "onSave", unique: true)
+    function fieldDecoratorOnSave(pipeline?: Pipeline<ThisFieldType?, ThisFieldType>): Decorator<.field> {
+        native
+    }
+
+    /// ## On Output
+    ///
+    /// This pipeline is triggered on output
+    @decorator(for: .field, as: "onOutput", unique: true)
+    function fieldDecoratorOnOutput(pipeline?: Pipeline<ThisFieldType, ThisFieldType>): Decorator<.field> {
+        native
+    }
+
+    /// ## Queryable
+    ///
+    /// This field can be queried by the client
+    @decorator(for: .field, as: "queryable", unique: true)
+    function fieldDecoratorQueryable(): Decorator<.field> {
+        native
+    }
+
+    /// ## Unqueryable
+    ///
+    /// This field can't be queried by the client
+    @decorator(for: .field, as: "unqueryable", unique: true)
+    function fieldDecoratorUnqueryable(): Decorator<.field> {
+        native
+    }
+
+    /// ## Sortable
+    ///
+    /// This field can be sorted by the client
+    @decorator(for: .field, as: "sortable", unique: true)
+    function fieldDecoratorSortable(): Decorator<.field> {
+        native
+    }
+
+    /// ## Unsortable
+    ///
+    /// This field can't be sorted by the client
+    @decorator(for: .field, as: "unsortable", unique: true)
+    function fieldDecoratorUnsortable(): Decorator<.field> {
+        native
+    }
+
+    /// ## Can Read
+    ///
+    /// Specify the permission checker for read on this field
+    @decorator(for: .field, as: "canRead", unique: true)
+    function fieldDecoratorCanRead(pipeline?: Pipeline<Self, Ignored>): Decorator<.field> {
+        native
+    }
+
+    /// ## Can Save
+    ///
+    /// Specify the permission checker for write on this field
+    @decorator(for: .field, as: "canSave", unique: true)
+    function fieldDecoratorCanSave(pipeline?: Pipeline<Self, Ignored>): Decorator<.field> {
+        native
+    }
+
+    /// ## Can Create
+    ///
+    /// Specify the permission checker for create on this field
+    @decorator(for: .field, as: "canCreate", unique: true)
+    function fieldDecoratorCanCreate(pipeline?: Pipeline<Self, Ignored>): Decorator<.field> {
+        native
+    }
+
+    /// ## Can Update
+    ///
+    /// Specify the permission checker for update on this field
+    @decorator(for: .field, as: "canUpdate", unique: true)
+    function fieldDecoratorCanUpdate(pipeline?: Pipeline<Self, Ignored>): Decorator<.field> {
+        native
+    }
+
+    /// ## Migration
+    ///
+    /// Specify the migration operation for this field
+    @decorator(for: .field, as: "migration", unique: true)
+    function fieldDecoratorMigration(renamed: Enumerable<String>?, version: String?, default: ThisFieldType?, priority: Int?): Decorator<.field> {
+        native
+    }
+
+    /// ## Dropped
+    ///
+    /// Specify that this field is dropped
+    @decorator(for: .field, as: "dropped", unique: true)
+    function fieldDecoratorDropped(): Decorator<.field> {
+        native
+    }
+
+    /// ## Relation
+    ///
+    /// Define a model relation
+    @decorator(for: .relation, as: "relation", unique: true)
+    function relationDecoratorRelation(
+        fields: Enumerable<SerializableScalarFields<Self>>,
+        references: Enumerable<SerializableScalarFields<ThisFieldType>>,
+        onUpdate: Update?,
+        onDelete: Delete?,
+    ): Decorator<.relation> {
+        native
+    }
+
+    /// ## Relation Through
+    ///
+    /// Define a through relation
+    @decorator(for: .relation, as: "throughRelation", unique: true)
+    function relationDecoratorThroughRelation<T>(
+        through: T,
+        local: DirectRelations<T>,
+        foreign: DirectRelations<T>,
+        onUpdate: Update?,
+        onDelete: Delete?,
+    ): Decorator<.relation> where T: Model {
+        native
+    }
+
+    /// ## Getter
+    ///
+    /// Define a property with getter
+    @decorator(for: .property, as: "getter", unique: true)
+    function propertyDecoratorGetter(pipeline?: Pipeline<Self, ThisFieldType>): Decorator<.property> {
+        native
+    }
+
+    /// ## Setter
+    ///
+    /// Define a property with setter
+    @decorator(for: .property, as: "setter", unique: true)
+    function propertyDecoratorSetter(pipeline?: Pipeline<ThisFieldType, Ignored>): Decorator<.property> {
+        native
+    }
+
+    /// ## Cached
+    ///
+    /// Define a cached property, a cached property is saved into the database
+    @decorator(for: .property, as: "cached", unique: true)
+    function propertyDecoratorCached(): Decorator<.property> {
+        native
+    }
+
+    /// ## Dependencies
+    ///
+    /// Define dependencies for a cached property
+    @decorator(for: .property, as: "deps", unique: true)
+    function propertyDecoratorDeps(deps?: Enumerable<SerializableScalarFields<Self>>): Decorator<.property> {
+        native
+    }
+
+    /// ## Index
+    ///
+    /// Define index for this cached property
+    @decorator(for: .property, as: "index", unique: true)
+    function propertyDecoratorIndex(sort: Sort?, length: Int?, map: String?): Decorator<.property> {
+        native
+    }
+
+    /// ## Unique
+    ///
+    /// Define unique index for this cached property
+    @decorator(for: .property, as: "unique", unique: true)
+    function propertyDecoratorUnique(sort: Sort?, length: Int?, map: String?): Decorator<.property> {
+        native
+    }
+
+    /// ## Input Omissible
+    ///
+    /// When type checking and generating clients, the input is always optional
+    @decorator(for: .property, as: "inputOmissible", unique: true)
+    function propertyDecoratorInputOmissible(): Decorator<.property> {
+        native
+    }
+
+    /// ## Output Omissible
+    ///
+    /// When generating clients, the output is always optional
+    @decorator(for: .property, as: "outputOmissible", unique: true)
+    function propertyDecoratorOutputOmissible(): Decorator<.property> {
+        native
+    }
+
+    #end
+
+    /// ## Generate Client
+    ///
+    /// Specify whether generate client for this type
+    @decorator(for: .type, as: "generateClient", unique: true)
+    function typeDecoratorGenerateClient(generate?: Bool = true): Decorator<.type> {
+        native
+    }
+
+    /// ## Generate Entity
+    ///
+    /// Specify whether generate entity for this type
+    @decorator(for: .type, as: "generateEntity", unique: true)
+    function typeDecoratorGenerateEntity(generate?: Bool = true): Decorator<.type> {
+        native
+    }
+
+    /// ## Map
+    ///
+    /// Specify HTTP method and request path for this handler
+    @decorator(for: .handler, as: "map", unique: true)
+    function handlerDecoratorMap(method?: Method?, path?: String?, ignorePrefix?: Bool?, interface: String?): Decorator<.handler> {
+        native
+    }
+
+    #if available(database)
+
+    @segment(as: "add")
+    function segmentAdd<T>(value?: T | Pipeline<T, T>): Pipeline<T, T> where T: Int | Int64 | Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "sub")
+    function segmentSub<T>(value?: T | Pipeline<T, T>): Pipeline<T, T> where T: Int | Int64 | Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "mul")
+    function segmentMul<T>(value?: T | Pipeline<T, T>): Pipeline<T, T> where T: Int | Int64 | Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "div")
+    function segmentDiv<T>(value?: T | Pipeline<T, T>): Pipeline<T, T> where T: Int | Int64 | Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "mod")
+    function segmentMod<T>(value?: T | Pipeline<T, T>): Pipeline<T, T> where T: Int | Int64 {
+        native
+    }
+
+    @segment(as: "floor")
+    function segmentFloor<T>(): Pipeline<T, T> where T: Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "ceil")
+    function segmentCeil<T>(): Pipeline<T, T> where T: Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "round")
+    function segmentRound<T>(): Pipeline<T, T> where T: Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "sqrt")
+    function segmentSqrt<T>(): Pipeline<T, T> where T: Int | Int64 | Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "cbrt")
+    function segmentCbrt<T>(): Pipeline<T, T> where T: Int | Int64 | Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "abs")
+    function segmentAbs<T>(): Pipeline<T, T> where T: Int | Int64 | Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "pow")
+    function segmentPow<T>(value?: T | Pipeline<T, Int>): Pipeline<T, T> where T: Int | Int64 | Float32 | Float {
+        native
+    }
+
+    @segment(as: "root")
+    function segmentRoot<T>(value?: T | Pipeline<T, Int>): Pipeline<T, T> where T: Int | Int64 {
+        native
+    }
+
+    @segment(as: "min")
+    function segmentMin<T>(value?: T | Pipeline<T, T>): Pipeline<T, T> where T: Int | Int64 | Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "max")
+    function segmentMax<T>(value?: T | Pipeline<T, T>): Pipeline<T, T> where T: Int | Int64 | Float32 | Float | Decimal {
+        native
+    }
+
+    @segment(as: "isEven")
+    function segmentIsEven<T>(): Pipeline<T, T> where T: Int | Int64 {
+        native
+    }
+
+    @segment(as: "isOdd")
+    function segmentIsOdd<T>(): Pipeline<T, T> where T: Int | Int64 {
+        native
+    }
+
+    @segment(as: "randomInt")
+    function segmentRandomInt(range?: Range<Int>, length?: Int): Pipeline<Ignored, Int> {
+        native
+    }
+
+    @segment(as: "randomFloat")
+    function segmentRandomFloat(range?: Range<Float>): Pipeline<Ignored, Float> {
+        native
+    }
+
+    @segment(as: "cuid")
+    function segmentCUID(): Pipeline<Ignored, String> {
+        native
+    }
+
+    @segment(as: "cuid2")
+    function segmentCUID2(): Pipeline<Ignored, String> {
+        native
+    }
+
+    @segment(as: "uuid")
+    function segmentUUID(): Pipeline<Ignored, String> {
+        native
+    }
+
+    @segment(as: "slug")
+    function segmentSlug(): Pipeline<Ignored, String> {
+        native
+    }
+
+    @segment(as: "randomDigits")
+    function segmentRandomDigits(len?: Int): Pipeline<Ignored, String> {
+        native
+    }
+
+    /// Truncate string with ellipsis
+    @segment(as: "ellipsis")
+    function segmentEllipsis(ellipsis?: String, width?: Int | Pipeline<String, Int>): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "padEnd")
+    function segmentPadEnd(width?: Int | Pipeline<String, Int>, char?: String): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "padStart")
+    function segmentPadStart(width?: Int | Pipeline<String, Int>, char?: String): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "regexReplace")
+    function segmentRegexReplace(format?: Regex, substitute?: String): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "split")
+    function segmentSplit(separator?: String | Pipeline<String, String>): Pipeline<String, String[]> {
+        native
+    }
+
+    @segment(as: "trim")
+    function segmentTrim(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "toWordCase")
+    function segmentToWordCase(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "toLowerCase")
+    function segmentToLowerCase(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "toUpperCase")
+    function segmentToUpperCase(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "toSentenceCase")
+    function segmentToSentenceCase(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "toTitleCase")
+    function segmentToTitleCase(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "hasPrefix")
+    function segmentHasPrefix(prefix?: String | Pipeline<String, String>): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "hasSuffix")
+    function segmentHasSuffix(suffix?: String | Pipeline<String, String>): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "isPrefixOf")
+    function segmentIsPrefixOf(value?: String | Pipeline<String, String>): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "isSuffixOf")
+    function segmentIsSuffixOf(value?: String | Pipeline<String, String>): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "isAlphabetic")
+    function segmentIsAlphabetic(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "isAlphanumeric")
+    function segmentIsAlphanumeric(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "isEmail")
+    function segmentIsEmail(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "isHexColor")
+    function segmentIsHexColor(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "isNumeric")
+    function segmentIsNumeric(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "isSecurePassword")
+    function segmentIsSecurePassword(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "regexMatch")
+    function segmentRegexMatch(regex?: Regex): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "print")
+    function segmentPrint<T>(label?: String): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Message
+    ///
+    /// If error occurred, replace error message and error code if specified
+    @segment(as: "message")
+    function segmentMessage<T, U>(pipeline?: Pipeline<T, U>, message?: String, code?: Int?): Pipeline<T, U> {
+        native
+    }
+
+    /// ## Presents
+    @segment(as: "presents")
+    function segmentPresents<T>(): Pipeline<T?, T> {
+        native
+    }
+
+    /// ## Append
+    @segment(as: "append")
+    function segmentAppend<T>(value?: T | Pipeline<T[], T>): Pipeline<T[], T[]> {
+        native
+    }
+
+    @segment(as: "appendString")
+    function segmentAppendString(value?: String | Pipeline<String, String>): Pipeline<String, String> {
+        native
+    }
+
+    /// ## Prepend
+    @segment(as: "prepend")
+    function segmentPrepend<T>(value?: T | Pipeline<T[], T>): Pipeline<T[], T[]> {
+        native
+    }
+
+    @segment(as: "prependString")
+    function segmentPrependString(value?: String | Pipeline<String, String>): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "count")
+    function segmentCount<T>(): Pipeline<T[], Int> {
+        native
+    }
+
+    @segment(as: "length")
+    function segmentLength(): Pipeline<String, Int> {
+        native
+    }
+
+    // declare pipeline item hasLength {
+    //    variant(len?: Int): String -> String
+    //    variant(range?: Range<Int>): String -> String
+    //    variant<T>(len?: Int): T[] -> T[]
+    //    variant<T>(range?: Range<Int>): T[] -> T[]
+    // }
+
+    @segment(as: "reverse")
+    function segmentReverse<T>(): Pipeline<T[], T[]> {
+        native
+    }
+
+    @segment(as: "reverseString")
+    function segmentReverseString(): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "truncate")
+    function segmentTruncate<T>(maxLen?: Int | Pipeline<T[], Int>): Pipeline<T[], T[]> {
+        native
+    }
+
+    @segment(as: "truncateString")
+    function segmentTruncateString(maxLen?: Int | Pipeline<String, Int>): Pipeline<String, String> {
+        native
+    }
+
+    @segment(as: "now")
+    function segmentNow(): Pipeline<Ignored, DateTime> {
+        native
+    }
+
+    @segment(as: "today")
+    function segmentToday<T>(tz?: Int | Pipeline<T, Int>): Pipeline<Ignored, Date> {
+        native
+    }
+
+    @segment(as: "toDate")
+    function segmentToDate(tz?: Int | Pipeline<DateTime, Int>): Pipeline<DateTime, Date> {
+        native
+    }
+
+    /// ## Valid
+    ///
+    /// This pipeline item is always valid
+    @segment(as: "valid")
+    function segmentValid<T>(): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Invalid
+    ///
+    /// This pipeline item is always invalid
+    @segment(as: "invalid")
+    function segmentInvalid<T>(): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Passed
+    ///
+    /// When `pipeline` doesn't throw, returns true
+    @segment(as: "passed")
+    function segmentPassed<T>(pipeline?: Pipeline<T, Ignored>): Pipeline<T, Bool> {
+        native
+    }
+
+    /// ## If
+    ///
+    /// If `cond` is true, execute `then`, otherwise execute `else`
+    @segment(as: "if")
+    function segmentIf<T, U, V>(cond?: Pipeline<T, U>, then?: Pipeline<U, V>?, else: Pipeline<T, V>?): Pipeline<T, V> {
+        native
+    }
+
+    /// ## Validate
+    ///
+    /// Validate the value with the pipeline
+    @segment(as: "validate")
+    function segmentValidate<T>(pipeline?: Pipeline<T, Ignored>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## All
+    ///
+    /// All matches
+    @segment(as: "all")
+    function segmentAll<T>(pipelines?: Pipeline<T, Ignored>[]): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Any
+    ///
+    /// Any matches
+    @segment(as: "any")
+    function segmentAny<T>(pipelines?: Pipeline<T, Ignored>[]): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Do
+    ///
+    /// Execute the pipeline
+    @segment(as: "do")
+    function segmentDo<T>(pipeline?: Pipeline<T, Ignored>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Not
+    ///
+    /// Not match
+    @segment(as: "not")
+    function segmentNot<T>(pipeline?: Pipeline<T, Ignored>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Cast
+    ///
+    /// Cast the output value to the type described in the argument
+    @segment(as: "cast")
+    function segmentCast<T, K>(target?: K): Pipeline<Any, T> where T: TypeValueAsType<K>, K: Type {
+        native
+    }
+
+    /// ## Match
+    ///
+    /// Match the value against the arms and return the result
+    @segment(as: "match")
+    function segmentMatch<T, U, V>(value?: Pipeline<T, U>, arms?: Pipeline<U, V>[]): Pipeline<T, V> {
+        native
+    }
+
+    /// ## Case
+    ///
+    /// `$case` is designed to be used together with `$match`
+    @segment(as: "case")
+    function segmentCase<T, U, V>(arm?: Pipeline<T, U>, exec?: Pipeline<U, V>): Pipeline<T, V> {
+        native
+    }
+
+    /// ## As Any
+    ///
+    /// Cast the value to Any type
+    @segment(as: "asAny")
+    function segmentAsAny(): Pipeline<Ignored, Any> {
+        native
+    }
+
+    /// ## Is
+    ///
+    /// True if input is value. For model objects, it performs a natural match. Otherwise, a `==` is used
+    @segment(as: "is")
+    function segmentIs<T>(value?: T | Pipeline<T, T>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Self
+    ///
+    /// Get the current pipeline context object
+    @segment(as: "self")
+    function segmentSelf<T>(): Pipeline<T, T> {
+        native
+    }
+
+    ///// @name Set
+    ///// Set the value on object or map
+    //declare pipeline item set {
+    //    variant<T, K>(key?: K, value?: T[K]): T -> T where K: ScalarFields<T>, T: Model
+    //    variant<T, K>(key?: K, value?: T[K]): T -> T where K: ShapeField<T>, T: Shape
+    //    variant<T>(key?: String, value?: T): T{} -> T{}
+    //    variant<T>(key?: Int): T[] -> T[]
+    //}
+
+    ///// @name Get
+    ///// Get the value on model object, array or dictionary
+    //declare pipeline item get {
+    //    variant<T, K>(key?: K): T -> T[K]? where K: ScalarFields<T>, T: Model
+    //    variant<T, K>(key?: K): T -> T[K]? where K: ShapeField<T>, T: Shape
+    //    variant<T>(key?: String): T{} -> T?
+    //    variant<T>(key?: Int): T[] -> T?
+    //}
+
+    ///// @name Previous
+    ///// Get the previous object value
+    //declare pipeline item previous<T, K>(key?: K): T -> T[K]? where K: ScalarFields<T>, T: Model
+
+    ///// @name Assign
+    ///// Assign value to key on context object
+    //declare pipeline item assign<T, K>(key?: K, value?: Self[K] | Pipeline<T, Self[K]>): T -> T where K: ScalarFields<Self>
+
+    /// ## Equal
+    ///
+    /// Valid if input is equal to rhs
+    @segment(as: "eq")
+    function segmentEq<T>(rhs?: T | Pipeline<T, T>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Greater Than
+    ///
+    /// Valid if input is greater than rhs
+    @segment(as: "gt")
+    function segmentGt<T>(rhs?: T | Pipeline<T, T>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Greater Than Or Equal
+    ///
+    /// Valid if input is greater than or equal to rhs
+    @segment(as: "gte")
+    function segmentGte<T>(rhs?: T | Pipeline<T, T>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Less Than
+    ///
+    /// Valid if input is less than rhs
+    @segment(as: "lt")
+    function segmentLt<T>(rhs?: T | Pipeline<T, T>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Less Than Or Equal
+    ///
+    /// Valid if input is less than or equal to rhs
+    @segment(as: "lte")
+    function segmentLte<T>(rhs?: T | Pipeline<T, T>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Not Equal
+    ///
+    /// Valid if input is not equal to rhs
+    @segment(as: "neq")
+    function segmentNeq<T>(rhs?: T | Pipeline<T, T>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Is False
+    ///
+    /// Valid if input is false
+    @segment(as: "isFalse")
+    function segmentIsFalse(): Pipeline<Bool, Bool> {
+        native
+    }
+
+    /// ## Is True
+    ///
+    /// Valid if input is true
+    @segment(as: "isTrue")
+    function segmentIsTrue(): Pipeline<Bool, Bool> {
+        native
+    }
+
+    /// ## Is Null
+    ///
+    /// Valid if input is null
+    @segment(as: "isNull")
+    function segmentIsNull<T>(): Pipeline<T?, T?> {
+        native
+    }
+
+    /// ## One Of
+    ///
+    /// Valid if input is one of candidates
+    @segment(as: "oneOf")
+    function segmentOneOf<T>(candidates?: T[] | Pipeline<T, T[]>): Pipeline<T, T> {
+        native
+    }
+
+    /// ## Join
+    ///
+    /// Join string array into a string with separator
+    @segment(as: "join")
+    function segmentJoin(separator?: String | Pipeline<String[], String>): Pipeline<String[], String> {
+        native
+    }
+
+    /// ## Filter
+    ///
+    /// Filter items by pipeline
+    @segment(as: "filter")
+    function segmentFilter<T>(pipeline?: Pipeline<T, Ignored>): Pipeline<T[], T[]> {
+        native
+    }
+
+    /// ## Map
+    ///
+    /// Perform map and collect results on array
+    @segment(as: "map")
+    function segmentMap<T, U>(pipeline?: Pipeline<T, U>): Pipeline<T[], U[]> {
+        native
+    }
+
+    /// ## Identity
+    ///
+    /// Fetch identity from the request.
+    @segment(as: "identity")
+    function segmentIdentity(): Pipeline<Ignored, Any> {
+        native
+    }
+
+    #end
+
+    /// ## Dispatch
+    ///
+    /// The main middleware that do the route dispatching
+    @middleware(stage: .dispatch, as: "dispatch")
+    function middlewareDispatch(): Middleware {
+        native
+    }
+
+    /// ## CORS
+    ///
+    /// Enable CORS for the handlers
+    @middleware(stage: .request, as: "cors")
+    function middlewareCORS(origin: String, methods: String[], headers: String[], maxAge: Int): Middleware {
+        native
+    }
+
+    /// ## Log Request
+    ///
+    /// Log request to the terminal
+    @middleware(stage: .request, as: "logRequest")
+    function middlewareLogRequest(): Middleware {
+        native
+    }
+
+    /// ## Empty
+    ///
+    /// The empty interface
+    type Empty = { }
+
+    /// ## Data
+    ///
+    /// This interface is common for action output
+    type Data<T> = {
+        data: T,
+    }
+
+    /// ## Data and Meta
+    ///
+    /// This interface is common for action output with meta information
+    type DataMeta<T, U> = {
+        data: T,
+        meta: U,
+    }
+
+    type PagingInfo = {
+        count: Int64,
+        numberOfPages: Int64?,
+    }
+
+    type ResponseError {
+        type: String,
+        message: String,
+        fields: String{}?,
+    }
+
+    #if available(database)
+
+    type BoolFilter = {
+        equals: Bool?,
+        not: (Bool | BoolFilter)?,
+    }
+
+    type BoolNullableFilter = {
+        equals: (Bool | Null)?,
+        not: (Bool | Null | BoolNullableFilter)?,
+    }
+
+    type Filter<T> = {
+        equals: T?,
+        in: T[]?,
+        notIn: T[]?,
+        lt: T?,
+        lte: T?,
+        gt: T?,
+        gte: T?,
+        not: (T | Filter<T>)?,
+    }
+
+    type NullableFilter<T> = {
+        equals: (T | Null)?,
+        in: (T | Null)[]?,
+        notIn: (T | Null)[]?,
+        lt: T?,
+        lte: T?,
+        gt: T?,
+        gte: T?,
+        not: (T | Null | NullableFilter<T>)?,
+    }
+
+    type StringFilter = {
+        equals: String?,
+        in: String[]?,
+        notIn: String[]?,
+        lt: String?,
+        lte: String?,
+        gt: String?,
+        gte: String?,
+        contains: String?,
+        startsWith: String?,
+        endsWith: String?,
+        matches: String?,
+        mode: StringMatchMode?,
+        not: (String | StringFilter)?,
+    }
+
+    type StringNullableFilter = {
+        equals: (String | Null)?,
+        in: (String | Null)[]?,
+        notIn: (String | Null)[]?,
+        lt: String?,
+        lte: String?,
+        gt: String?,
+        gte: String?,
+        contains: String?,
+        startsWith: String?,
+        endsWith: String?,
+        matches: String?,
+        mode: StringMatchMode?,
+        not: (String | Null | StringNullableFilter)?,
+    }
+
+    type EnumFilter<T> = {
+        equals: T?,
+        in: T[]?,
+        notIn: T[]?,
+        not: (T | EnumFilter<T>)?,
+    }
+
+    type EnumNullableFilter<T> = {
+        equals: (T | Null)?,
+        in: (T | Null)[]?,
+        notIn: (T | Null)[]?,
+        not: (T | Null | EnumNullableFilter<T>)?,
+    }
+
+    type ArrayFilter<T> = {
+        equals: T[]?,
+        has: T?,
+        hasSome: T[]?,
+        hasEvery: T[]?,
+        isEmpty: Bool?,
+        length: Int?,
+    }
+
+    type ArrayNullableFilter<T> = {
+        equals: (T[] | Null)?,
+        has: T?,
+        hasSome: T[]?,
+        hasEvery: T[]?,
+        isEmpty: Bool?,
+        length: Int?,
+    }
+
+    type BoolWithAggregatesFilter = BoolFilter & {
+        _count: Int64?,
+        _min: BoolFilter?,
+        _max: BoolFilter?,
+    }
+
+    type BoolNullableWithAggregatesFilter = BoolNullableFilter & {
+        _count: Int64?,
+        _min: BoolNullableFilter?,
+        _max: BoolNullableFilter?,
+    }
+
+    type IntNumberWithAggregatesFilter<T> = Filter<T> & {
+        _count: Int64?,
+        _min: Filter<T>?,
+        _max: Filter<T>?,
+        _avg: Filter<Float>?,
+        _sum: Filter<Int64>?,
+    }
+
+    type IntNumberNullableWithAggregatesFilter<T> = NullableFilter<T> & {
+        _count: Int64?,
+        _min: NullableFilter<T>?,
+        _max: NullableFilter<T>?,
+        _avg: NullableFilter<Float>?,
+        _sum: NullableFilter<Int64>?,
+    }
+
+    type FloatNumberWithAggregatesFilter<T> = Filter<T> & {
+        _count: Int64?,
+        _min: Filter<T>?,
+        _max: Filter<T>?,
+        _avg: Filter<Float>?,
+        _sum: Filter<Float>?,
+    }
+
+    type FloatNumberNullableWithAggregatesFilter<T> = NullableFilter<T> & {
+        _count: Int64?,
+        _min: NullableFilter<T>?,
+        _max: NullableFilter<T>?,
+        _avg: NullableFilter<Float>?,
+        _sum: NullableFilter<Float>?,
+    }
+
+    type DecimalWithAggregatesFilter = Filter<Decimal> & {
+        _count: Int64?,
+        _min: Filter<Decimal>?,
+        _max: Filter<Decimal>?,
+        _avg: Filter<Decimal>?,
+        _sum: Filter<Decimal>?,
+    }
+
+    type DecimalNullableWithAggregatesFilter<T> = NullableFilter<T> & {
+        _count: Int64?,
+        _min: NullableFilter<Decimal>?,
+        _max: NullableFilter<Decimal>?,
+        _avg: NullableFilter<Decimal>?,
+        _sum: NullableFilter<Decimal>?,
+    }
+
+    type AggregatesFilter<T> = Filter<T> & {
+        _count: Int64?,
+        _min: Filter<T>?,
+        _max: Filter<T>?,
+    }
+
+    type NullableAggregatesFilter<T> = NullableFilter<T> & {
+        _count: Int64?,
+        _min: NullableFilter<T>?,
+        _max: NullableFilter<T>?,
+    }
+
+    type StringWithAggregatesFilter = StringFilter & {
+        _count: Int64?,
+        _min: StringFilter?,
+        _max: StringFilter?,
+    }
+
+    type StringNullableWithAggregatesFilter = StringNullableFilter & {
+        _count: Int64?,
+        _min: StringNullableFilter?,
+        _max: StringNullableFilter?,
+    }
+
+    type EnumWithAggregatesFilter<T> = EnumFilter<T> & {
+        _count: Int64?,
+        _min: EnumFilter<T>?,
+        _max: EnumFilter<T>?,
+    }
+
+    type EnumNullableWithAggregatesFilter<T> = EnumNullableFilter<T> & {
+        _count: Int64?,
+        _min: EnumNullableFilter<T>?,
+        _max: EnumNullableFilter<T>?,
+    }
+
+    type ArrayWithAggregatesFilter<T> = ArrayFilter<T> & {
+        _count: Int64?,
+        _min: ArrayFilter<T>?,
+        _max: ArrayFilter<T>?,
+    }
+
+    type ArrayNullableWithAggregatesFilter<T> = ArrayNullableFilter<T> & {
+        _count: Int64?,
+        _min: ArrayNullableFilter<T>?,
+        _max: ArrayNullableFilter<T>?,
+    }
+
+    type NumberAtomicUpdateOperationInput<T> = {
+        increment: T?,
+        decrement: T?,
+        multiply: T?,
+        divide: T?,
+    }
+
+    type ArrayAtomicUpdateOperationInput<T> = {
+        push: T?,
+    }
+
+    @generateClient(false) @generateEntity(false) @showInStudio(false)
+    @admin.ignore
+    model DataSetRecord {
+
+        @id @default($cuid)
+        id: String
+
+        dataSet: String
+
+        group: String
+
+        name: String
+
+        record: String
+    }
+
+    @generateClient(false) @generateEntity(false) @showInStudio(false) @synthesizeShapes(false)
+    @admin.ignore
+    model DataSetRelation {
+
+        @id @default($cuid)
+        id: String
+
+        dataSet: String
+
+        groupA: String
+
+        relationA: String
+
+        nameA: String
+
+        groupB: String
+
+        relationB: String?
+
+        nameB: String
+    }
+
+    #end
+
+    /// @name Bcrypt
+    /// Bcrypt related pipeline items
+    namespace bcrypt {
+
+        /// ## Salt
+        ///
+        /// Transform this string value with Bcrypt salt
+        @segment
+        function salt(): Pipeline<String, String> {
+            native
+        }
+
+        /// @name Verify
+        /// Verify with Bcrypt verify
+        @segment
+        function verify(pipeline?: Pipeline<String, String>): Pipeline<String, String> {
+            native
+        }
+    }
+
+    /// @name Identity
+    /// Identity and user session
+    namespace identity {
+
+        type TokenInfo = {
+            token: String,
+        }
+
+        declare synthesized shape SignInCheckerIds {
+            declare optional synthesized field with @identity.id
+        }
+
+        declare synthesized shape SignInCheckerCompanions {
+            declare optional synthesized field with @identity.companion
+        }
+
+        @generateClient(false) @generateEntity(false)
+        type SignInCheckerArgs<T, C, I> = {
+            value: T,
+            companions: C,
+            ids: I,
+        }
+
+        declare synthesized shape SignInInput {
+            credentials: SignInArgs<Self>
+            select: Select<Self>?
+            include: Include<Self>?
+        }
+
+        declare synthesized shape SignInArgs {
+            declare optional synthesized field with @identity.id
+            declare optional synthesized field with @identity.checker
+            declare optional synthesized field with @identity.companion
+        }
+
+        declare unique model decorator tokenIssuer(pipeline?: Pipeline<SignInArgs<Self>, String>)
+
+        declare unique model decorator validateAccount(pipeline?: Pipeline<Self, Ignored>)
+
+        declare unique model decorator jwtSecret(secret?: String)
+
+        declare model field decorator id
+
+        declare model field decorator checker(pipeline?: Pipeline<SignInCheckerArgs<ThisFieldType, SignInCheckerCompanions<Self>, SignInCheckerIds<Self>>, Ignored>)
+
+        declare model field decorator companion
+
+        declare pipeline item jwt(expired: (Int64 | Pipeline<SignInArgs<Self>, Int64>)?): SignInArgs<Self> -> String
+
+        declare handler template signIn(SignInInput<Self>): DataMeta<Result<Self>, TokenInfo>
+
+        declare handler template identity(Args<Self>): Data<Result<Self>>
+
+        declare handler middleware identityFromJwt(secret?: String)
+    }
+
+    /// @name Admin
+    /// The admin dashboard functionalities
+    namespace admin {
+
+        /// @name Language
+        /// The human language that is supported
+        enum Language {
+            enUs
+            enUk
+            de
+            fr
+            es
+            hi
+            he
+            ja
+            ko
+            zhCn
+            zhTw
+        }
+
+        /// @name Administrator
+        /// Use this model as an administrator in admin dashboard
+
+        declare model decorator administrator
+
+        /// @name Ignore
+        /// Ignore this model in admin dashboard
+        declare model decorator ignore
+
+        /// @name Title
+        /// Use this field as a record's title in admin dashboard
+        declare model field decorator title
+
+        /// @name Subtitle
+        /// Use this field as a record's subtitle in admin dashboard
+        declare model field decorator subtitle
+
+        /// @name Cover Image
+        /// Use this field as a record's cover image in admin dashboard
+        declare model field decorator coverImage
+
+        /// @name Secure Input
+        /// Treat this field's input as secure input in admin dashboard
+        declare model field decorator secureInput
+
+        /// @name Embedded
+        /// The related object or objects display in this model's form
+        declare model relation decorator embedded
+    }
+}

@@ -8,4 +8,5 @@ default = ["stdfs"]
 stdfs = ["path-clean"]
 
 [dependencies]
+logos = "0.15.0"
 path-clean = { version = "1.0.1", optional = true }

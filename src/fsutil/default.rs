@@ -1,4 +1,4 @@
-use crate::fsutil::FSUtil;
+use super::FSUtil;
 use path_clean::PathClean;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -40,14 +40,14 @@ fn file_is_directory(file_path: &str) -> bool {
 /// Provide a default implementation for file system utility.
 impl Default for FSUtil {
     fn default() -> Self {
-        Self {
+        Self::new(
             read_file,
             file_exists,
             file_is_directory,
             path_join,
             parent_directory,
             path_is_absolute,
-        }
+        )
     }
 }
 
