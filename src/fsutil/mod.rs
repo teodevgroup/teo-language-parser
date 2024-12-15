@@ -58,7 +58,7 @@ impl FSUtil {
     /// }
     ///
     /// fn path_is_absolute(path: &str) -> bool {
-    ///     Path::new(path).is_absolute()
+    ///     path.starts_with("/")
     /// }
     ///
     /// fn path_join(base: &str, path: &str) -> String {
