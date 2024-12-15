@@ -1,7 +1,7 @@
+use crate::fsutil::FSUtil;
+use path_clean::PathClean;
 use std::fs;
 use std::path::{Path, PathBuf};
-use path_clean::PathClean;
-use crate::fsutil::FSUtil;
 
 fn read_file(file_path: &str) -> Option<String> {
     match fs::read_to_string(Path::new(file_path)) {
@@ -25,7 +25,12 @@ fn path_is_absolute(path: &str) -> bool {
 }
 
 fn path_join(base: &str, path: &str) -> String {
-    Path::new(base).join(Path::new(path)).clean().to_str().unwrap().to_string()
+    Path::new(base)
+        .join(Path::new(path))
+        .clean()
+        .to_str()
+        .unwrap()
+        .to_string()
 }
 
 fn file_is_directory(file_path: &str) -> bool {
@@ -168,7 +173,8 @@ mod tests {
     }
 
     #[test]
-    fn test_parent_directory_returns_empty_string_if_path_is_single_component_with_trailing_slash() {
+    fn test_parent_directory_returns_empty_string_if_path_is_single_component_with_trailing_slash()
+    {
         let path = "src/";
         let parent = parent_directory(path);
         assert_eq!(parent, "");
@@ -189,35 +195,40 @@ mod tests {
     }
 
     #[test]
-    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_trailing_slash() {
+    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_trailing_slash(
+    ) {
         let path = "src/fsutil/default.rs/";
         let parent = parent_directory(path);
         assert_eq!(parent, "src/fsutil");
     }
 
     #[test]
-    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_multiple_trailing_slashes() {
+    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_multiple_trailing_slashes(
+    ) {
         let path = "src/fsutil/default.rs///";
         let parent = parent_directory(path);
         assert_eq!(parent, "src/fsutil");
     }
 
     #[test]
-    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_multiple_trailing_slashes_and_root() {
+    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_multiple_trailing_slashes_and_root(
+    ) {
         let path = "/src/fsutil/default.rs///";
         let parent = parent_directory(path);
         assert_eq!(parent, "/src/fsutil");
     }
 
     #[test]
-    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_multiple_trailing_slashes_and_root_and_trailing_slash() {
+    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_multiple_trailing_slashes_and_root_and_trailing_slash(
+    ) {
         let path = "/src/fsutil/default.rs///";
         let parent = parent_directory(path);
         assert_eq!(parent, "/src/fsutil");
     }
 
     #[test]
-    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_multiple_trailing_slashes_and_root_and_trailing_slash_and_root() {
+    fn test_parent_directory_returns_parent_directory_of_path_with_multiple_components_and_multiple_trailing_slashes_and_root_and_trailing_slash_and_root(
+    ) {
         let path = "/src/fsutil/default.rs///";
         let parent = parent_directory(path);
         assert_eq!(parent, "/src/fsutil");

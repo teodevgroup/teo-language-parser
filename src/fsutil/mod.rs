@@ -24,7 +24,6 @@ pub struct FSUtil {
 }
 
 impl FSUtil {
-
     /// Create a new instance of file system utility.
     ///
     /// # Arguments
