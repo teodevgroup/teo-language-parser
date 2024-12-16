@@ -40,6 +40,39 @@ enum Token {
     #[token("native")]
     Native,
 
+    #[token("where")]
+    Where,
+
+    #[token("+")]
+    Plus,
+
+    #[token("-")]
+    Minus,
+
+    #[token("*")]
+    Star,
+
+    #[token("/")]
+    Slash,
+
+    #[token("%")]
+    Percent,
+
+    #[token("^")]
+    Caret,
+
+    #[token("&")]
+    Ampersand,
+
+    #[token("|")]
+    Pipe,
+
+    #[token("!")]
+    Bang,
+
+    #[token("?")]
+    Question,
+
     #[token(".")]
     Period,
 
